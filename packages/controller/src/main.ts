@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { ControlRequest } from "shared";
+import { ControlRequest, State } from "shared";
 import { execute } from "./execute";
 
 const sendExecutablePath = "/home/pi/Coding/433Utils/RPi_utils/send";
@@ -18,10 +18,16 @@ controller.post('/switch-control', async (req: Request, res: Response) => {
   const switchRequest = req.body as ControlRequest;
   console.log(`New switch request ${JSON.stringify(switchRequest)}`);
 
-  const command = `${sendExecutablePath} ${switchRequest.systemCode} ${switchRequest.unitCode} ${switchRequest.direction}`;
+  const direction = State[switchRequest.direction];
+  const command = `${sendExecutablePath} ${switchRequest.systemCode} ${switchRequest.unitCode} ${direction}`;
 
   console.log(`Executing command ${JSON.stringify(command)}`);
-  await execute(command);
+
+  try {
+    await execute(command);
+  } catch (error: any) {
+    console.error(`Error executing command: ${error}`);
+  }
 });
 
 controller.listen(port, () => {
