@@ -25,8 +25,11 @@ controller.post('/switch-control', async (req: Request, res: Response) => {
 
   try {
     await execute(command);
+    res.send("Ok");
   } catch (error: any) {
     console.error(`Error executing command: ${error}`);
+    res.status(500);
+    res.send("Error");
   }
 });
 
