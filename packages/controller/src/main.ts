@@ -20,6 +20,7 @@ controller.post('/switch-control', async (req: Request, res: Response) => {
 
   const command = `${sendExecutablePath} ${switchRequest.systemCode} ${switchRequest.unitCode} ${switchRequest.direction}`;
 
+  console.log(`Executing command ${JSON.stringify(command)}`);
   await execute(command);
 });
 
